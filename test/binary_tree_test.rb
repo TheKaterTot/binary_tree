@@ -113,7 +113,7 @@ class BinaryTreeTest < MiniTest::Test
     tree.add("Batman Returns", 25)
     tree.add("Darkman", 80)
 
-    assert_equal nil, tree.depth_of(7)
+    assert_nil tree.depth_of(7)
   end
 
   def test_tree_returns_array_of_hashes
@@ -179,8 +179,9 @@ class BinaryTreeTest < MiniTest::Test
     tree.add("Beetlejuice", 40)
     tree.add("Batman Returns", 25)
     tree.add("Darkman", 80)
+    node = tree.root.right_link
 
-    assert_equal 2, tree.count_node_and_children(40)
+    assert_equal 2, tree.count_node_and_children(node)
   end
 
   def test_tree_can_assess_health
@@ -191,6 +192,19 @@ class BinaryTreeTest < MiniTest::Test
     tree.add("Batman Returns", 25)
     tree.add("Darkman", 80)
 
-    assert_equal [[10, 3, 40.to_i], [40, 3, 40.to_i]], tree.health(1)
+    assert_equal [[10, 2, 40], [40, 2, 40]], tree.health(1)
+  end
+
+  def test_tree_health_on_larger_number
+    tree = BinaryTree.new
+    tree.add("Mission Impossible", 30)
+    tree.add("Dumb and Dumber", 10)
+    tree.add("Beetlejuice", 40)
+    tree.add("Batman Returns", 25)
+    tree.add("Darkman", 80)
+    tree.add("Wall Street", 2)
+    tree.add("Jungle Book", 28)
+
+    assert_equal [[2, 1, 14], [25, 2, 28], [80, 1, 14]], tree.health(2)
   end
 end

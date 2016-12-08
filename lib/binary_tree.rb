@@ -126,6 +126,8 @@ class BinaryTree
 
   end
 
+
+
   def sort(current_node=nil, movie_list=[])
     current_node = current_node || @root
     if !current_node.nil?
@@ -162,18 +164,17 @@ class BinaryTree
     total_nodes = movies.count
   end
 
-  def count_node_and_children(score, node_count = 0.0, current_node = nil)
+  def count_node_and_children(current_node = nil)
+    node_count = 0
     current_node = current_node || @root
-    if !current_node.nil? || current_node.score == score
+    if !current_node.nil?
       if !current_node.left_link.nil?
-        node_count += 1
-        count_node_and_children(score, node_count, current_node.left_link)
+        node_count += count_node_and_children(current_node.left_link)
       end
       if !current_node.right_link.nil?
-        node_count += 1
-        count_node_and_children(score, node_count, current_node.right_link)
+        node_count += count_node_and_children(current_node.right_link)
       end
-      node_count
+      node_count + 1
     end
   end
 
@@ -181,7 +182,8 @@ class BinaryTree
     current_node = current_node || @root
     if !current_node.nil?
       if depth_of(current_node.score) == depth
-        nodes_at_depth << [current_node.score, count_node_and_children(current_node.score), ((count_node_and_children(current_node.score)/total_nodes)) * 100.to_f]
+        count_nodes = count_node_and_children(current_node)
+        nodes_at_depth << [current_node.score, count_nodes, ((count_nodes/total_nodes.to_f) * 100).to_i]
       else
         if !current_node.left_link.nil?
           health(depth, current_node.left_link, nodes_at_depth)
