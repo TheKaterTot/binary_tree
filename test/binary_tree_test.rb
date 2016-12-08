@@ -115,4 +115,82 @@ class BinaryTreeTest < MiniTest::Test
 
     assert_equal nil, tree.depth_of(7)
   end
+
+  def test_tree_returns_array_of_hashes
+    tree = BinaryTree.new
+    tree.add("Mission Impossible", 30)
+    tree.add("Dumb and Dumber", 10)
+    tree.add("Beetlejuice", 40)
+    tree.add("Batman Returns", 25)
+    tree.add("Darkman", 80)
+
+
+    assert_equal Array, tree.sort.class
+    #assert_equal Hash, movie_list[0].class
+  end
+
+  def test_tree_sorts_hash
+    tree = BinaryTree.new
+    tree.add("Mission Impossible", 30)
+    tree.add("Dumb and Dumber", 10)
+    tree.add("Beetlejuice", 40)
+    tree.add("Batman Returns", 25)
+    tree.add("Darkman", 80)
+
+    expected = [{"Dumb and Dumber" => 10},
+                {"Batman Returns" => 25},
+                {"Mission Impossible" => 30},
+                {"Beetlejuice" => 40},
+                {"Darkman" => 80}]
+
+    assert_equal expected, tree.sort()
+  end
+
+  def test_tree_can_read_file
+    tree = BinaryTree.new
+    file = "movies.txt"
+
+    assert_equal 99, tree.load(file)
+  end
+
+  def test_tree_ignores_duplicates
+    tree = BinaryTree.new
+    file = "movies.txt"
+    tree.add("Cruel Intentions", 0)
+
+    assert_equal 98, tree.load(file)
+  end
+
+  def test_tree_counts_total_nodes
+    tree = BinaryTree.new
+    tree.add("Mission Impossible", 30)
+    tree.add("Dumb and Dumber", 10)
+    tree.add("Beetlejuice", 40)
+    tree.add("Batman Returns", 25)
+    tree.add("Darkman", 80)
+
+    assert_equal 5, tree.total_nodes
+  end
+
+  def test_tree_can_count_node_and_children
+    tree = BinaryTree.new
+    tree.add("Mission Impossible", 30)
+    tree.add("Dumb and Dumber", 10)
+    tree.add("Beetlejuice", 40)
+    tree.add("Batman Returns", 25)
+    tree.add("Darkman", 80)
+
+    assert_equal 2, tree.count_node_and_children(40)
+  end
+
+  def test_tree_can_assess_health
+    tree = BinaryTree.new
+    tree.add("Mission Impossible", 30)
+    tree.add("Dumb and Dumber", 10)
+    tree.add("Beetlejuice", 40)
+    tree.add("Batman Returns", 25)
+    tree.add("Darkman", 80)
+
+    assert_equal [[10, 3, 40.to_i], [40, 3, 40.to_i]], tree.health(1)
+  end
 end

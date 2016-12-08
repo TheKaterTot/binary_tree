@@ -1,4 +1,5 @@
 require_relative "./node.rb"
+require "pry"
 
 class BinaryTree
 
@@ -8,25 +9,29 @@ class BinaryTree
 
   end
 
-  def add(title, score, current_node=nil)
+  def add(title, score, current_node=nil, current_depth=0)
     current_node = current_node || @root
+    current_depth = current_depth
     if @root.nil?
       @root = Node.new(title, score)
     else
       if score < current_node.score
         if current_node.left_link.nil?
           current_node.left_link = Node.new(title, score)
+          current_depth += 1
         else
           add(title, score, current_node.left_link)
         end
       else
         if current_node.right_link.nil?
           current_node.right_link = Node.new(title, score)
+          current_depth += 1
         else
           add(title, score, current_node.right_link)
         end
       end
     end
+    current_depth
   end
 
   # def max
@@ -99,6 +104,9 @@ class BinaryTree
 
   def depth_of(score, current_node=nil, current_depth=0)
     current_node = current_node || @root
+    if @root.nil?
+      return nil
+    end
     if current_node.nil? || current_node.score == score
       current_depth
     else
@@ -118,6 +126,71 @@ class BinaryTree
 
   end
 
+  def sort(current_node=nil, movie_list=[])
+    current_node = current_node || @root
+    if !current_node.nil?
+      if !current_node.left_link.nil?
+        sort(current_node.left_link, movie_list)
+      end
+      movie_list << {current_node.title => current_node.score}
+      if !current_node.right_link.nil?
+        sort(current_node.right_link, movie_list)
+      end
+    else
+      []
+    end
+    movie_list
+  end
 
+  def load(file)
+    counter = 0
+    contents = File.read(file)
+    lines = contents.split("\n")
+    lines.each do |line|
+      movie = line.split(",") #array of strings
+      unless include?(movie[0].to_i)
+        add(movie[1], movie[0].to_i)
+        counter += 1
+      end
+    end
+    counter
+  end
 
+  def total_nodes
+    total_nodes = 0.0
+    movies = sort
+    total_nodes = movies.count
+  end
+
+  def count_node_and_children(score, node_count = 0.0, current_node = nil)
+    current_node = current_node || @root
+    if !current_node.nil? || current_node.score == score
+      if !current_node.left_link.nil?
+        node_count += 1
+        count_node_and_children(score, node_count, current_node.left_link)
+      end
+      if !current_node.right_link.nil?
+        node_count += 1
+        count_node_and_children(score, node_count, current_node.right_link)
+      end
+      node_count
+    end
+  end
+
+  def health(depth, current_node=nil, nodes_at_depth=[])
+    current_node = current_node || @root
+    if !current_node.nil?
+      if depth_of(current_node.score) == depth
+        nodes_at_depth << [current_node.score, count_node_and_children(current_node.score), ((count_node_and_children(current_node.score)/total_nodes)) * 100.to_f]
+      else
+        if !current_node.left_link.nil?
+          health(depth, current_node.left_link, nodes_at_depth)
+        end
+        if !current_node.right_link.nil?
+          health(depth, current_node.right_link, nodes_at_depth)
+        end
+      end
+    end
+    nodes_at_depth
+  end
 end
