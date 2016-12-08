@@ -15,26 +15,27 @@ class BinaryTree
     if @root.nil?
       @root = Node.new(title, score)
       @count += 1
+      current_depth
     else
+      current_depth += 1
       if score < current_node.score
         if current_node.left_link.nil?
           current_node.left_link = Node.new(title, score)
-          current_depth += 1
           @count += 1
+          current_depth
         else
-          add(title, score, current_node.left_link)
+          add(title, score, current_node.left_link, current_depth)
         end
       else
         if current_node.right_link.nil?
           current_node.right_link = Node.new(title, score)
-          current_depth += 1
           @count += 1
+          current_depth
         else
-          add(title, score, current_node.right_link)
+          add(title, score, current_node.right_link, current_depth)
         end
       end
     end
-    current_depth
   end
 
   # def max

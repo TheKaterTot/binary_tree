@@ -50,6 +50,15 @@ class BinaryTreeTest < MiniTest::Test
     assert_equal 25, node.score
   end
 
+  def test_tree_add_returns_depth
+    tree = BinaryTree.new
+    assert_equal 0, tree.add("Mission Impossible", 30)
+    assert_equal 1, tree.add("Top Gun", 10)
+    assert_equal 2, tree.add("Mask", 20)
+    assert_equal 3, tree.add("Darkman", 25)
+    assert_equal 1, tree.add("BOOM!", 40)
+  end
+
   def test_tree_goes_to_right_for_max
     tree = BinaryTree.new
     tree.add("Mission Impossible", 30)
