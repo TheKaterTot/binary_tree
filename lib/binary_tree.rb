@@ -6,7 +6,7 @@ class BinaryTree
   attr_reader :root
 
   def initialize
-
+    @count = 0
   end
 
   def add(title, score, current_node=nil, current_depth=0)
@@ -14,11 +14,13 @@ class BinaryTree
     current_depth = current_depth
     if @root.nil?
       @root = Node.new(title, score)
+      @count += 1
     else
       if score < current_node.score
         if current_node.left_link.nil?
           current_node.left_link = Node.new(title, score)
           current_depth += 1
+          @count += 1
         else
           add(title, score, current_node.left_link)
         end
@@ -26,6 +28,7 @@ class BinaryTree
         if current_node.right_link.nil?
           current_node.right_link = Node.new(title, score)
           current_depth += 1
+          @count += 1
         else
           add(title, score, current_node.right_link)
         end
@@ -159,9 +162,7 @@ class BinaryTree
   end
 
   def total_nodes
-    total_nodes = 0.0
-    movies = sort
-    total_nodes = movies.count
+    @count
   end
 
   def count_node_and_children(current_node = nil)
